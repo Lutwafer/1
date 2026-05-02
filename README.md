@@ -1,30 +1,22 @@
-# FitCoach Pro — UI как на скриншоте
+# FitCoach Pro — готово с твоим Firebase config
 
-Готовый архив со светлым мобильным UI:
-- верхние вкладки
-- карточка программы
-- список следующих тренировок
-- блок уведомлений
-- нижнее меню
-- Firebase Auth / Firestore
-- Paywall / PRO
-- Demo режим
+Я уже вставил Firebase config в `js/config.js`.
 
-## Как запустить
-Открой `index.html`.
+## Что осталось сделать в Firebase
+1. Authentication → Sign-in method → Email/Password → Enable
+2. Firestore Database → Create database → Start in test mode
 
-## Как подключить Firebase
-1. Firebase Console → Create project
-2. Add app → Web
-3. Скопируй firebaseConfig
-4. Вставь в `js/config.js`
-5. Authentication → Email/Password → Enable
-6. Firestore Database → Create database
+## Как проверить
+1. Открой `index.html`
+2. Нажми `Регистрация`
+3. Введи email и пароль минимум 6 символов
+4. Добавь тренировку
+5. В Firebase → Firestore появится коллекция `users`
 
-## PRO / оплата
-В `js/config.js` вставь Stripe Payment Link:
-```js
-const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/...";
-```
+## Для тебя и жены
+- Ты регистрируешься со своим email
+- Жена регистрируется со своим email
+- У каждого отдельные данные
 
-DEMO PRO работает кнопкой `Активировать DEMO PRO`.
+## Важно
+Для публикации лучше загрузить папку на GitHub Pages или Vercel.
