@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#ffffff" />
+  <title>FitCoach Pro</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="css/style.css" />
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<section id="authScreen" class="auth active">
+  <div class="auth-logo">FC</div>
+  <h1>FitCoach Pro</h1>
+  <p>Тренировки · Диета · Прогресс</p>
+
+  <div class="auth-card">
+    <input id="email" type="email" placeholder="Email" />
+    <input id="password" type="password" placeholder="Пароль" />
+    <button onclick="login()">Войти</button>
+    <button class="secondary" onclick="register()">Регистрация</button>
+    <button class="ghost" onclick="demo()">Демо режим</button>
+  </div>
+</section>
+
+<main id="app" class="app">
+  <header class="top">
+    <button class="icon">◷</button>
+    <h1 id="pageTitle">Тренировки</h1>
+    <button class="menu">☷<span></span></button>
+  </header>
+
+  <div class="tabs">
+    <button class="active" onclick="setTopTab(this)">Рабочий стол</button>
+    <button onclick="setTopTab(this)">Тренировки</button>
+    <button onclick="setTopTab(this)">Диета</button>
+    <button onclick="setTopTab(this)">Спорт</button>
+  </div>
+
+  <section id="homeView" class="view active">
+    <div class="share-card">
+      <div class="share-ico">⌯</div>
+      <div>Поделись тренировкой. Нажми и отправь ссылку</div>
+    </div>
+
+    <div class="program-card">
+      <div class="program-overlay"></div>
+      <div class="program-content">
+        <h2>Общий набор<br>мышечной массы</h2>
+        <p>⚚ Для зала &nbsp; ★☆☆☆☆ Начинающий</p>
+        <p class="teal">24 тренировочных дня (3 тренировки в неделю)</p>
+        <p>Выполнено занятий: <span id="doneCount">0</span></p>
+      </div>
+      <button class="share-small">●</button>
+    </div>
+
+    <div class="section-title">Следующие тренировки</div>
+    <div id="trainingList" class="training-list"></div>
+
+    <div class="section-row">
+      <div class="section-title">Уведомления</div>
+      <button onclick="openPaywall()">Ещё ›</button>
+    </div>
+
+    <div class="notice-card">
+      <div class="notice-icon">▣</div>
+      <div>
+        <h3>Алло! Аппарат абонента выключен...</h3>
+        <p>...или наотрез отказывается посещать тренировки! Что за помехи на линии? Пора звонить в службу поддержки?</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="feedView" class="view">
+    <div class="section-title">Лента активности</div>
+    <div id="historyList"></div>
+  </section>
+
+  <section id="messagesView" class="view">
+    <div class="empty">
+      <h2>Сообщения</h2>
+      <p>Здесь будут уведомления тренера и напоминания.</p>
+    </div>
+  </section>
+
+  <section id="guideView" class="view">
+    <div class="section-title">Справочник</div>
+    <div class="guide-grid">
+      <button onclick="quickWorkout()">Добавить тренировку</button>
+      <button onclick="openFood()">Добавить еду</button>
+      <button onclick="openPaywall()">PRO функции</button>
+    </div>
+  </section>
+
+  <section id="moreView" class="view">
+    <div class="profile-card">
+      <div class="avatar">💪</div>
+      <h2 id="userEmail">demo@fitcoach.app</h2>
+      <p id="proBadge">FREE</p>
+      <button onclick="openPaywall()">Открыть PRO</button>
+      <button class="ghost" onclick="logout()">Выйти</button>
+    </div>
+  </section>
+
+  <nav class="bottom">
+    <button class="active" onclick="nav('home',this)">⚚<span>Тренировки</span></button>
+    <button onclick="nav('feed',this)">▤<span>Лента</span></button>
+    <button onclick="nav('messages',this)">☏<span>Сообщения</span></button>
+    <button onclick="nav('guide',this)">▣<span>Справочник</span></button>
+    <button onclick="nav('more',this)">…<span>Ещё</span><b>!</b></button>
+  </nav>
+</main>
+
+<div id="paywall" class="modal">
+  <div class="modal-card">
+    <button class="close" onclick="closeModals()">×</button>
+    <div class="crown">👑</div>
+    <h2>FitCoach PRO</h2>
+    <p>Открой заблокированные тренировки, аналитику, AI-планы и экспорт прогресса.</p>
+
+    <div class="pay-list">
+      <div>✅ Все программы тренировок</div>
+      <div>✅ Диета и калории</div>
+      <div>✅ Расширенная статистика</div>
+      <div>✅ PRO для продажи клиентам</div>
+    </div>
+
+    <button onclick="activatePro()">Активировать DEMO PRO</button>
+    <button class="ghost" onclick="fakePay()">Подключить оплату</button>
+  </div>
+</div>
+
+<div id="foodModal" class="modal">
+  <div class="modal-card">
+    <button class="close" onclick="closeModals()">×</button>
+    <h2>Добавить еду</h2>
+    <select id="foodSelect"></select>
+    <button onclick="addFood()">Добавить</button>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
